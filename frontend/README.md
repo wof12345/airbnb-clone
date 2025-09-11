@@ -1,3 +1,1 @@
-A simple documentation tool.
-
-## Next Docs
+## Airbnb copy
