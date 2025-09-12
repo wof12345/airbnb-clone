@@ -1,15 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Button from "./Buttons/Button";
-import {
-  IconBrandAirbnb,
-  IconGlobe,
-  IconHome,
-  IconMenu,
-  IconMenu2,
-  IconWorld,
-} from "@tabler/icons-react";
+import Button from "../Buttons/Button";
+import { IconMenu2, IconWorld } from "@tabler/icons-react";
+import NavTab from "./Tab";
+import NavSearch from "./Search";
+import { navigationItems } from "@/lib/data/nav";
 
 type Type = "primary" | "secondary";
 type Links = { href: string; label: string }[];
@@ -24,18 +20,13 @@ export default function Nav({}: Props) {
   const [open, setOpen] = useState(true);
 
   return (
-    <nav className="bg-primary-100 w-full h-24 flex items-center justify-center">
+    <nav className="bg-primary-100 w-full h-max flex items-center flex-col py-3.5 justify-center">
       <div className="max-w-[1801px] w-full flex justify-between items-center px-6">
-        <div className="w-25 h-12 text-red-400">
+        <div className="w-25 h-12">
           <img className="w-full h-full" src="./logo.svg" alt="" />
         </div>
 
-        <div className="flex flex-col gap-4 text-black">
-          <div className="flex gap-3">
-            <IconHome />
-            <p>Homes</p>
-          </div>
-        </div>
+        <NavTab items={navigationItems} />
 
         <div className="flex gap-2">
           <Button variant="icon">
@@ -47,6 +38,8 @@ export default function Nav({}: Props) {
           </Button>
         </div>
       </div>
+
+      <NavSearch />
     </nav>
   );
 }

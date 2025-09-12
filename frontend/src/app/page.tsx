@@ -1,4 +1,4 @@
-import Nav from "@/lib/components/Nav";
+import Nav from "@/lib/components/Nav/Nav";
 import { useTranslations } from "next-intl";
 
 export default function HomePage() {
