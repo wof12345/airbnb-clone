@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Button from "../Buttons/Button";
-import { IconMenu2, IconWorld } from "@tabler/icons-react";
+import { IconBrandAirbnb, IconMenu2, IconWorld } from "@tabler/icons-react";
 import NavTab from "./Tab";
 import NavSearch from "./Search";
 import { navigationItems } from "@/lib/data/nav";
@@ -17,13 +17,19 @@ type Props = {
 };
 
 export default function Nav({}: Props) {
-  const [open, setOpen] = useState(true);
-
   return (
     <nav className="bg-primary-100 w-full h-max flex items-center flex-col py-3.5 justify-center">
       <div className="max-w-[1801px] w-full flex justify-between items-center px-6">
         <div className="w-25 h-12">
-          <img className="w-full h-full" src="./logo.svg" alt="" />
+          <img
+            className="w-full h-full hidden md:block"
+            src="./logo.svg"
+            alt=""
+          />
+
+          <div className="md:hidden block text-secondary-600">
+            <IconBrandAirbnb size={40} stroke={1.5} />
+          </div>
         </div>
 
         <NavTab items={navigationItems} />

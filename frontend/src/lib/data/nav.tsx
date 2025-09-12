@@ -53,6 +53,62 @@ export const navigationItems: NavigationItem[] = [
       },
     ],
   },
-  { label: "Experiences", links: [], hasNew: true },
-  { label: "Services", links: [], hasNew: true },
+  {
+    label: "Experiences",
+    links: [],
+    hasNew: true,
+    subItems: [
+      {
+        label: "Where",
+        action: {
+          title: "Search Destinations",
+          type: "location-search-dropdown",
+        },
+      },
+      {
+        label: "Date",
+        action: {
+          title: "Add dates",
+          type: "date",
+        },
+      },
+
+      {
+        label: "Who",
+        action: {
+          title: "Add guests",
+          type: "invitation-menu",
+        },
+      },
+    ],
+  },
+  {
+    label: "Services",
+    links: [],
+    hasNew: true,
+    subItems: [
+      {
+        label: "Where",
+        action: {
+          title: "Search Destinations",
+          type: "location-search-dropdown",
+        },
+      },
+      {
+        label: "Date",
+        action: {
+          title: "Add dates",
+          type: "date",
+        },
+      },
+
+      {
+        label: "Who",
+        action: {
+          title: "Add guests",
+          type: "invitation-menu",
+        },
+      },
+    ],
+  },
 ];

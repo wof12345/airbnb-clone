@@ -27,7 +27,11 @@ export default function NavSearch() {
           key={i}
           onMouseEnter={() => setHover(i)} // optional hover state
           onMouseLeave={() => setHover(-1)}
-          className="relative flex flex-col gap-1 rounded-full text-start p-4 px-7 hover:bg-gray-200 w-full"
+          className={`relative flex flex-col gap-1 rounded-full text-start p-4 px-7 hover:bg-gray-200 w-full ${
+            i === 0 || i === subItems.length - 1
+              ? "flex-2 max-w-[280px]"
+              : "flex-1"
+          }`}
         >
           {i !== subItems.length - 1 && (
             <span

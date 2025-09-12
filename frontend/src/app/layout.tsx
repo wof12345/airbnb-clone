@@ -1,6 +1,12 @@
 import { NextIntlClientProvider } from "next-intl";
 import "./globals.css";
 import RTKWrapper from "@/lib/components/RTKWrapper";
+import Nav from "@/lib/components/Nav/Nav";
+import Footer from "@/lib/components/Footer/Footer";
+import { Inter, Lato } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
+const lato = Lato({ weight: ["100", "300", "400", "700", "900"] });
 
 type Props = {
   children: React.ReactNode;
@@ -9,9 +15,13 @@ type Props = {
 export default async function RootLayout({ children }: Props) {
   return (
     <html>
-      <body>
+      <body className={lato.className}>
         <RTKWrapper>
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+          <NextIntlClientProvider>
+            <Nav />
+            {children}
+            <Footer />
+          </NextIntlClientProvider>
         </RTKWrapper>
       </body>
     </html>

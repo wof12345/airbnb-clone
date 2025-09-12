@@ -36,7 +36,7 @@ export default function NavTab({ items = [] }: Props) {
     }
   }
 
-  useEffect(() => {
+  function setActiveIndicatorBar(active: number) {
     const activeTab = tabRefs.current[active];
     const indicator = indicatorRef.current;
 
@@ -44,7 +44,23 @@ export default function NavTab({ items = [] }: Props) {
       indicator.style.width = `${activeTab.offsetWidth}px`;
       indicator.style.left = `${activeTab.offsetLeft}px`;
     }
-  }, [active, items]);
+  }
+
+  useEffect(() => {
+    setActiveIndicatorBar(active);
+  }, [active]);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    const onResize = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => setActiveIndicatorBar(active), 50);
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => window.removeEventListener("resize", onResize);
+  }, [active]);
 
   return (
     <div
@@ -63,7 +79,7 @@ export default function NavTab({ items = [] }: Props) {
             ref={(el) => (tabRefs.current[i] = el)}
             onClick={() => dispatch(setActiveIndex(i))}
             onMouseEnter={(e) => handleMouseIn(i)}
-            className={`nav-tab nav-tab-${i} flex gap-2 items-center justify-between relative px-1 mb-1 py-1 w-max
+            className={`nav-tab nav-tab-${i} flex gap-2 items-center justify-between relative py-1 w-max
               ${active === i ? "text-gray-800 font-semibold" : "text-gray-500"}
             `}
           >
