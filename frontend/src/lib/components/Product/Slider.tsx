@@ -30,7 +30,7 @@ export default function ProductSlider({
     <div className="flex flex-col gap-3 px-8 my-8">
       <div className="flex justify-between items-center">
         <button className="flex gap-0.5 items-center">
-          <h1 className="text-lg font-bold text-gray-600">{title}</h1>{" "}
+          <h1 className="text-lg font-bold text-gray-800">{title}</h1>{" "}
           <IconChevronRight size={16} />
         </button>
 

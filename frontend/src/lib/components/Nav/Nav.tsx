@@ -1,11 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import Button from "../Buttons/Button";
 import { IconBrandAirbnb, IconMenu2, IconWorld } from "@tabler/icons-react";
 import NavTab from "./Tab";
 import NavSearch from "./Search";
 import { navigationItems } from "@/lib/data/nav";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setActiveNavState,
+  setActiveSubNavState,
+  setAppBarState,
+} from "@/lib/store/navSlice";
+import { RootState } from "@reduxjs/toolkit/query";
+import NavSearchResponsive from "./SearchResponsive";
 
 type Type = "primary" | "secondary";
 type Links = { href: string; label: string }[];
@@ -17,35 +25,94 @@ type Props = {
 };
 
 export default function Nav({}: Props) {
-  return (
-    <nav className="bg-primary-100 w-full h-max flex items-center flex-col py-3.5 justify-center">
-      <div className="max-w-[1801px] w-full flex justify-between items-center px-6">
-        <div className="w-25 h-12">
-          <img
-            className="w-full h-full hidden md:block"
-            src="./logo.svg"
-            alt=""
-          />
+  const dispatch = useDispatch();
+  const navState = useSelector((state: RootState) => state.nav.navState);
+  const subNavState = useSelector((state: RootState) => state.nav.subNavState);
 
-          <div className="md:hidden block text-secondary-600">
-            <IconBrandAirbnb size={40} stroke={1.5} />
+  useEffect(() => {
+    const threshold = 100;
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+      //  AppBar state logic
+      if (atBottom) {
+        setAppBarState(1);
+      } else if (scrolled > lastScrollY) {
+        setAppBarState(0);
+      } else if (scrolled < lastScrollY) {
+        setAppBarState(1);
+      }
+
+      if (scrolled > threshold && navState !== 1) {
+        dispatch(setActiveNavState(1));
+        dispatch(setActiveSubNavState(0));
+      } else if (scrolled <= threshold && navState !== 0) {
+        dispatch(setActiveNavState(0));
+        dispatch(setActiveSubNavState(1));
+      }
+
+      lastScrollY = scrolled;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [dispatch, navState]);
+
+  return (
+    <>
+      {navState && subNavState ? (
+        <div
+          onClick={(e) => {
+            dispatch(setActiveSubNavState(0));
+          }}
+          className="fixed opacity-30 bg-gray-800 w-screen h-screen z-5 left-0 top-0"
+        ></div>
+      ) : (
+        <></>
+      )}
+
+      <nav
+        className={`bg-primary-100 shadow-lg flex items-center flex-col pt-3.5 md:py-3.5 md:gap-0 gap-2 justify-end md:justify-start z-[100] w-full fixed top-0 ${
+          navState && !subNavState
+            ? "h- md:h-[100px]"
+            : "h-[150px] md:h-[200px]"
+        }`}
+      >
+        <NavSearchResponsive />
+
+        <div className="max-w-[1801px] w-full flex justify-between items-center px-6">
+          <div className="w-25 h-12 md:flex hidden">
+            <img
+              className="w-full h-full hidden lg:block"
+              src="./logo.svg"
+              alt=""
+            />
+
+            <div className="lg:hidden block text-secondary-600">
+              <IconBrandAirbnb size={40} stroke={1.5} />
+            </div>
+          </div>
+
+          <NavTab items={navigationItems} />
+
+          <div className="hidden md:flex gap-2">
+            <Button variant="icon">
+              <IconWorld size={18} />
+            </Button>
+
+            <Button variant="icon">
+              <IconMenu2 size={18} />
+            </Button>
           </div>
         </div>
 
-        <NavTab items={navigationItems} />
-
-        <div className="flex gap-2">
-          <Button variant="icon">
-            <IconWorld size={18} />
-          </Button>
-
-          <Button variant="icon">
-            <IconMenu2 size={18} />
-          </Button>
-        </div>
-      </div>
-
-      <NavSearch />
-    </nav>
+        <NavSearch />
+      </nav>
+    </>
   );
 }

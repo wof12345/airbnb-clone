@@ -20,7 +20,7 @@ export default function ProductCard({ item = {} }: Props) {
 
       <div className="absolute top-3 right-3 text-xs shadow-sm font-semibold text-gray-100 rounded-full ">
         <button className="hover:scale-110">
-          <IconHeart fill="#60594F" fillOpacity={0.3} />
+          <IconHeart fill="#60594F" fillOpacity={0.5} />
         </button>
       </div>
 

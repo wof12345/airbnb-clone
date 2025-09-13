@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Tab } from "../Tab/Tab";
-import GeneralItem from "../GeneralItem";
 import FooterTab from "./TabPanel";
 import FooterLinks from "./Links";
 import {
@@ -10,7 +9,6 @@ import {
   IconBrandInstagram,
   IconBrandX,
   IconCurrencyPound,
-  IconGlobe,
   IconWorld,
 } from "@tabler/icons-react";
 
@@ -24,8 +22,6 @@ type Props = {
 };
 
 export default function Footer({}: Props) {
-  const [open, setOpen] = useState(true);
-
   const footerBarLinks = [
     { href: "#", label: "Privacy" },
     { href: "#", label: "Terms" },
@@ -37,38 +33,40 @@ export default function Footer({}: Props) {
   ];
 
   return (
-    <footer className="bg-primary-100 w-full h-max flex flex-col py-12 px-6 mt-10">
-      <h1 className="text-xl text-start mb-5 font-semibold">
-        Inspiration for future getaways
-      </h1>
+    <footer className="bg-primary-100 w-full h-max flex flex-col pt-12 pb- md:py-12 px-6 md:px-12 mt-10">
+      <div className="max-w-[1440px] m-auto w-full flex flex-col">
+        <h1 className="text-xl text-start mb-5 font-semibold">
+          Inspiration for future getaways
+        </h1>
 
-      <Tab defaultIndex={0}>
-        <Tab.List>
-          <Tab.Button index={0}>Home</Tab.Button>
-          <Tab.Button index={1}>Profile</Tab.Button>
-          <Tab.Button index={2}>Settings</Tab.Button>
-        </Tab.List>
+        <Tab defaultIndex={0}>
+          <Tab.List>
+            <Tab.Button index={0}>Home</Tab.Button>
+            <Tab.Button index={1}>Profile</Tab.Button>
+            <Tab.Button index={2}>Settings</Tab.Button>
+          </Tab.List>
 
-        <Tab.Body>
-          <Tab.Panel index={0}>
-            <FooterTab />
-          </Tab.Panel>
-          <Tab.Panel index={1}>
-            <FooterTab />
-          </Tab.Panel>
-          <Tab.Panel index={2}>
-            <FooterTab />
-          </Tab.Panel>
-        </Tab.Body>
-      </Tab>
+          <Tab.Body>
+            <Tab.Panel index={0}>
+              <FooterTab />
+            </Tab.Panel>
+            <Tab.Panel index={1}>
+              <FooterTab />
+            </Tab.Panel>
+            <Tab.Panel index={2}>
+              <FooterTab />
+            </Tab.Panel>
+          </Tab.Body>
+        </Tab>
+      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 py-8 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 py-8 gap-8">
         <FooterLinks title="Support" />
         <FooterLinks title="Support" />
         <FooterLinks title="Support" />
       </div>
 
-      <div className="py-6 border-t border-gray-200 text-gray-800 flex lg:flex-row gap-5 justify-between  flex-col-reverse">
+      <div className="py-6 border-t-none md:border-t border-gray-300 text-gray-800 flex lg:flex-row gap-5 justify-between  flex-col-reverse">
         <div className="flex flex-col gap-1">
           <p className="text-sm ">© 2025 Airbnb, Inc.</p>
 

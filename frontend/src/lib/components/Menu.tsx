@@ -1,33 +1,80 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { twMerge } from "tailwind-merge";
+
+type Type = "type-1" | "type-2" | "type-3" | "type-4" | "custom";
 
 type Props = {
-  title: string;
-  subTitle: string;
-  anchorRef?: React.RefObject<HTMLElement>;
+  anchorRef?: HTMLElement;
+  containerRef?: React.RefObject<HTMLElement>;
   open: boolean;
+  children: React.ReactNode;
+  type: Type;
 };
 
 export default function Menu({
-  title,
-  subTitle,
   anchorRef,
+  containerRef,
   open = false,
+  children,
+  type = "type-1",
+  ...props
 }: Props) {
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [styles, setStyles] = useState({ top: 0, left: 0, width: "100%" });
 
-  // Calculate position relative to anchor
-  const updatePosition = () => {
-    const anchor = anchorRef?.current;
-    if (anchor) {
-      const rect = anchor.getBoundingClientRect();
-      setPosition({
-        top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX,
-      });
+  function getStyleByType(type: Type, rect: DOMRect, containerRect: DOMRect) {
+    const topGap = 15;
+
+    const relativeTop = rect.bottom - containerRect.top + topGap;
+    const relativeLeft = rect.left - containerRect.left;
+
+    switch (type) {
+      case "type-1":
+        return {
+          top: relativeTop,
+          left: 0,
+          width: "50%",
+        };
+      case "type-2":
+        return {
+          top: relativeTop,
+          left: 0,
+          width: "100%",
+        };
+      case "type-3":
+        return {
+          top: relativeTop,
+          left: "20%",
+          width: "70%",
+        };
+      case "type-4":
+        return {
+          top: relativeTop,
+          left: "50%",
+          width: "50%",
+        };
+      default:
+        return {
+          top: relativeTop,
+          left: relativeLeft,
+          width: rect.width,
+        };
     }
+  }
+
+  const updatePosition = () => {
+    const anchor = anchorRef;
+
+    setTimeout(() => {
+      if (anchor) {
+        const rect = anchor.getBoundingClientRect();
+        const containerRect = containerRef?.current.getBoundingClientRect();
+        console.log(getStyleByType(type, rect, containerRect));
+        setStyles(getStyleByType(type, rect, containerRect));
+      }
+    }, 150);
   };
 
   useEffect(() => {
@@ -35,8 +82,8 @@ export default function Menu({
       if (
         menuRef.current &&
         !menuRef.current.contains(e.target as Node) &&
-        anchorRef?.current &&
-        !anchorRef.current.contains(e.target as Node)
+        anchorRef &&
+        !anchorRef.contains(e.target as Node)
       ) {
       }
     };
@@ -46,7 +93,7 @@ export default function Menu({
 
   useEffect(() => {
     updatePosition();
-  }, [open]);
+  }, [open, anchorRef]);
 
   useEffect(() => {
     const handleResize = () => updatePosition();
@@ -55,26 +102,19 @@ export default function Menu({
   }, [anchorRef]);
 
   return (
-    <>
-      {open && (
-        <div
-          ref={menuRef}
-          style={{ top: position.top, left: position.left }}
-          className="absolute top-0 z-50 bg-white shadow-lg rounded p-4 min-w-[200px]"
-        >
-          <h1 className="text-sm font-semibold text-gray-800">{title}</h1>
-          <p className="text-sm text-gray-500">{subTitle}</p>
-        </div>
+    <div
+      ref={menuRef}
+      style={{ top: styles.top, left: styles.left, width: styles.width }}
+      className={twMerge(
+        `absolute top-0 left-0 z-50 min-h-[400px] bg-white shadow-lg rounded-4xl p-4 min-w-[200px] delay-700 ${
+          open
+            ? "scale-100 opacity-100"
+            : "scale-0 pointer-events-none opacity-0"
+        }`,
+        props.className
       )}
-      {/* optional internal trigger button */}
-      {!anchorRef && (
-        <button
-          onClick={openMenu}
-          className="px-4 py-2 bg-blue-500 text-white rounded mt-2"
-        >
-          Open Menu
-        </button>
-      )}
-    </>
+    >
+      {children}
+    </div>
   );
 }
