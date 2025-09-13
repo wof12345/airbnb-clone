@@ -4,11 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "@reduxjs/toolkit/query";
-import { navigationItems, SubItem } from "@/lib/data/nav";
+import { ActionType, navigationItems, SubItem } from "@/lib/data/nav";
 import Button from "../Buttons/Button";
 import { IconSearch } from "@tabler/icons-react";
 import Menu from "../Menu";
 import { setActiveSubNavState } from "@/lib/store/navSlice";
+import { DateRangePicker } from "../Form/DatePickerRange";
+import { LocationMenu } from "../LocationMenu";
+import { DatePicker } from "../Form/DatePicker";
+import { GuestPicker } from "../Form/GuestPicker";
 
 export default function NavSearch() {
   const dispatch = useDispatch();
@@ -27,6 +31,30 @@ export default function NavSearch() {
 
   const indicatorRef = useRef<HTMLDivElement | null>(null);
   const subItemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  function getMenuComponent(active: number) {
+    const subItem = subItems[active];
+
+    if (!subItem) return <></>;
+
+    const type: ActionType = subItem.action.type;
+
+    switch (type) {
+      case "location-search-dropdown":
+        return <LocationMenu />;
+      case "date-range":
+        return <DateRangePicker />;
+      case "date":
+        return <DatePicker />;
+      case "invitation-menu":
+        return <GuestPicker />;
+      case "location-search":
+        return <LocationMenu />;
+
+      default:
+        return <></>;
+    }
+  }
 
   function getMenuType(activeSubitem: number) {
     if (activeSubitem === 0) {
@@ -56,7 +84,7 @@ export default function NavSearch() {
         indicator.style.width = `${activeBtn.offsetWidth}px`;
         indicator.style.left = `${activeBtn.offsetLeft}px`;
       }
-    }, 200);
+    }, 180);
   }, [activeSubitem, subItems]);
 
   useEffect(() => {
@@ -100,7 +128,6 @@ export default function NavSearch() {
           : "top-16 w-[95%]  max-w-[850px] h-18"
       } rounded-full  m-5 my-6 shadow-lg`}
     >
-      {/* Indicator */}
       <div
         ref={indicatorRef}
         className={`absolute top-0 left-0 h-full rounded-full bg-white shadow-md  transition-all duration-300 ease-in-out ${
@@ -169,7 +196,9 @@ export default function NavSearch() {
         type={getMenuType(activeSubitem)}
         anchorRef={subItemRefs.current[activeSubitem] as HTMLElement}
         containerRef={containerRef}
-      />
+      >
+        {getMenuComponent(activeSubitem)}
+      </Menu>
 
       <div
         className={`absolute z-11  ${

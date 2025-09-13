@@ -14,6 +14,8 @@ import {
 } from "@/lib/store/navSlice";
 import { RootState } from "@reduxjs/toolkit/query";
 import NavSearchResponsive from "./SearchResponsive";
+import Modal from "../Modal";
+import { setLanguageModal } from "@/lib/store/modalSlice";
 
 type Type = "primary" | "secondary";
 type Links = { href: string; label: string }[];
@@ -28,6 +30,7 @@ export default function Nav({}: Props) {
   const dispatch = useDispatch();
   const navState = useSelector((state: RootState) => state.nav.navState);
   const subNavState = useSelector((state: RootState) => state.nav.subNavState);
+  const languageModal = useSelector((state: RootState) => state.modal.language);
 
   useEffect(() => {
     const threshold = 100;
@@ -79,7 +82,7 @@ export default function Nav({}: Props) {
       <nav
         className={`bg-primary-100 shadow-lg flex items-center flex-col pt-3.5 md:py-3.5 md:gap-0 gap-2 justify-end md:justify-start z-[100] w-full fixed top-0 ${
           navState && !subNavState
-            ? "h- md:h-[100px]"
+            ? "h-[110px] md:h-[80px]"
             : "h-[150px] md:h-[200px]"
         }`}
       >
@@ -101,9 +104,17 @@ export default function Nav({}: Props) {
           <NavTab items={navigationItems} />
 
           <div className="hidden md:flex gap-2">
-            <Button variant="icon">
+            <Button
+              onClick={() => dispatch(setLanguageModal(1))}
+              variant="icon"
+            >
               <IconWorld size={18} />
             </Button>
+
+            <Modal
+              state={languageModal}
+              setState={(value: number) => dispatch(setLanguageModal(value))}
+            />
 
             <Button variant="icon">
               <IconMenu2 size={18} />
