@@ -77,7 +77,7 @@ export default function HomePage() {
       }
 
       try {
-        const res = await fetch(`/services?${queryParams}`);
+        const res = await fetch(`/api/services?${queryParams}`);
         const data = await res.json();
 
         dispatch(setServices(data));
@@ -108,7 +108,7 @@ export default function HomePage() {
         <div className="w-full flex flex-wrap gap-4 gap-y-10 p-6 py-10 justify-evenly">
           {services.map((service: IService, idx: number) => (
             <ProductCard
-              className={"md:max-w-[250px] self-start"}
+              className={" md:max-w-[250px] self-start"}
               item={service}
               key={idx}
             />
