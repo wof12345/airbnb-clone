@@ -8,5 +8,13 @@
     "outDir": "dist",
     "allowImportingTsExtensions": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "config",
+    "routes",
+    "models",
+    "controllers",
+    "app.ts",
+    "seed.ts"
+  ]
 }
