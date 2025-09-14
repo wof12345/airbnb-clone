@@ -62,27 +62,23 @@ export const expItems = [
     city: randomChoice(allowed_cities),
     date: thirtyDaysFromNow,
   },
+
   {
-    title: "Popular with travelers from your area",
-    items: [
-      {
-        title: "Experiences in ",
-        city: randomChoice(allowed_cities),
-      },
-      {
-        title: "Experiences in ",
-        city: randomChoice(allowed_cities),
-        date: thirtyDaysFromNow,
-      },
-      {
-        title: "Experiences in ",
-        city: randomChoice(allowed_cities),
-      },
-      {
-        title: "Experiences in ",
-        city: randomChoice(allowed_cities),
-      },
-    ],
+    title: "Experiences in ",
+    city: randomChoice(allowed_cities),
+  },
+  {
+    title: "Experiences in ",
+    city: randomChoice(allowed_cities),
+    date: thirtyDaysFromNow,
+  },
+  {
+    title: "Experiences in ",
+    city: randomChoice(allowed_cities),
+  },
+  {
+    title: "Experiences in ",
+    city: randomChoice(allowed_cities),
   },
 ];
 

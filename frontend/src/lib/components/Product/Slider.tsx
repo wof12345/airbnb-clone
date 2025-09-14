@@ -148,7 +148,7 @@ function ProductSlider({ type = "home", title = "Documents", item }: Props) {
       >
         <div className="w-max flex gap-3">
           {loading ? <IconLoader /> : null}
-          {items.map((pitem, idx) => (
+          {items?.map((pitem, idx) => (
             <ProductCard key={idx} item={pitem} />
           ))}
         </div>
