@@ -77,7 +77,7 @@ export default function HomePage() {
       }
 
       try {
-        const res = await fetch(`/api/services?${queryParams}`);
+        const res = await fetch(`/services?${queryParams}`);
         const data = await res.json();
 
         dispatch(setServices(data));

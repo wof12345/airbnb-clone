@@ -64,7 +64,7 @@ function ProductSlider({ type = "home", title = "Documents", item }: Props) {
       if (item?.service) queryParams += `service_types=${item.service}&&`;
 
       try {
-        const res = await fetch(`/api/services?${queryParams}`);
+        const res = await fetch(`/services?${queryParams}`);
         const data = await res.json();
         setItems(data);
       } catch (err) {

@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     const queryString = searchParams.toString();
-    const url = `${BACKEND_URL}/api/services${
+    const url = `${BACKEND_URL}/services${
       queryString ? `?${queryString}` : ""
     }`;
 
