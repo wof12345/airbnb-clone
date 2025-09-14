@@ -11,4 +11,4 @@ Planned :
 
 * reduce UI action delay
 
-live link : [reduce UI action delay](https://airbnb-clone-fe-eta.vercel.app/)
+live link : [live](https://airbnb-clone-fe-eta.vercel.app/)
