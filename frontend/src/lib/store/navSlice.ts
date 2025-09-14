@@ -5,6 +5,7 @@ interface NavState {
   navState: number;
   subNavState: number;
   appBarState: number;
+  searchIndicator: number;
 }
 
 const initialState: NavState = {
@@ -12,6 +13,7 @@ const initialState: NavState = {
   navState: 0,
   subNavState: 1,
   appBarState: 1,
+  searchIndicator: 0,
 };
 
 const navSlice = createSlice({
@@ -33,6 +35,10 @@ const navSlice = createSlice({
     setAppBarState: (state, action: PayloadAction<number>) => {
       state.appBarState = action.payload;
     },
+
+    setSearchIndicator: (state, action: PayloadAction<number>) => {
+      state.searchIndicator = action.payload;
+    },
   },
 });
 
@@ -41,5 +47,6 @@ export const {
   setActiveNavState,
   setActiveSubNavState,
   setAppBarState,
+  setSearchIndicator,
 } = navSlice.actions;
 export default navSlice.reducer;

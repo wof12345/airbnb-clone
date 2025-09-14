@@ -6,13 +6,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@reduxjs/toolkit/query";
 import { ActionType, navigationItems, SubItem } from "@/lib/data/nav";
 import Button from "../Buttons/Button";
-import { IconSearch } from "@tabler/icons-react";
+import { IconSearch, IconX } from "@tabler/icons-react";
 import Menu from "../Menu";
-import { setActiveSubNavState } from "@/lib/store/navSlice";
-import { DateRangePicker } from "../Form/DatePickerRange";
+import { setActiveSubNavState, setSearchIndicator } from "@/lib/store/navSlice";
 import { LocationMenu } from "../LocationMenu";
 import { DatePicker } from "../Form/DatePicker";
 import { GuestPicker } from "../Form/GuestPicker";
+import {
+  GuestState,
+  setCheckIn,
+  setCheckOut,
+  setDate,
+  setDestination,
+  setGuests,
+  setService,
+} from "@/lib/store/filterSlice";
+import { ServicePicker } from "../Form/ServicePicker";
+import { Checkout } from "../Form/CheckInPicker";
+import { CheckIn } from "../Form/CheckOutPicker";
+import { convertToReadable } from "@/lib/utils/date";
 
 export default function NavSearch() {
   const dispatch = useDispatch();
@@ -20,6 +32,18 @@ export default function NavSearch() {
   const active = useSelector((state: RootState) => state.nav.activeIndex);
   const navState = useSelector((state: RootState) => state.nav.navState);
   const subNavState = useSelector((state: RootState) => state.nav.subNavState);
+  const searchIndicator = useSelector(
+    (state: RootState) => state.nav.searchIndicator
+  );
+
+  const destination = useSelector(
+    (state: RootState) => state.filter.destination
+  );
+  const checkIn = useSelector((state: RootState) => state.filter.checkIn);
+  const checkOut = useSelector((state: RootState) => state.filter.checkOut);
+  const date = useSelector((state: RootState) => state.filter.date);
+  const guests = useSelector((state: RootState) => state.filter.guests);
+  const services = useSelector((state: RootState) => state.filter.service);
 
   const [hover, setHover] = useState<number>(-1);
   const [activeSubitem, setActiveSubItem] = useState<number>(-1);
@@ -42,19 +66,27 @@ export default function NavSearch() {
     switch (type) {
       case "location-search-dropdown":
         return <LocationMenu />;
-      case "date-range":
-        return <DateRangePicker />;
+      case "checkout":
+        return <Checkout />;
+      case "checkin":
+        return <CheckIn />;
       case "date":
-        return <DatePicker />;
+        return <DatePicker onSelect={(value) => dispatch(setDate(value))} />;
       case "invitation-menu":
         return <GuestPicker />;
       case "location-search":
         return <LocationMenu />;
+      case "service-selection":
+        return <ServicePicker />;
 
       default:
         return <></>;
     }
   }
+
+  const handleChange = (e) => {
+    dispatch(setDestination(e.target.value));
+  };
 
   function getMenuType(activeSubitem: number) {
     if (activeSubitem === 0) {
@@ -66,6 +98,232 @@ export default function NavSearch() {
     } else {
       return "type-3";
     }
+  }
+
+  function getComponentOrValue(subItem: SubItem) {
+    if (subItem.action.type === "location-search-dropdown") {
+      return (
+        <input
+          onFocus={() => setActiveSubItem(0)}
+          onInput={handleChange}
+          className="outline-none text-sm placeholder:text-sm placeholder:text-gray-500"
+          placeholder={subItem.action.title}
+          value={destination}
+          type="text"
+          name=""
+          id=""
+        />
+      );
+    } else if (
+      subItem.action.type === "invitation-menu" &&
+      generateGuestText(subItem) !== subItem.action.title
+    ) {
+      return (
+        <div className="max-w-[120px] text-sm text-gray-500">
+          <p className="truncate">{generateGuestText(subItem)}</p>
+        </div>
+      );
+    } else if (
+      subItem.action.type === "service-selection" &&
+      generateServiceText(subItem) !== subItem.action.title
+    ) {
+      return (
+        <div className="max-w-[130px] text-sm text-gray-500">
+          <p className="truncate">{generateServiceText(subItem)}</p>
+        </div>
+      );
+    } else if (subItem.action.type === "checkin" && checkIn) {
+      return (
+        <div className="max-w-[70px] text-sm text-gray-500">
+          <p className="truncate">{convertToReadable(checkIn)}</p>
+        </div>
+      );
+    } else if (subItem.action.type === "date" && date) {
+      return (
+        <div className="max-w-[70px] text-sm text-gray-500">
+          <p className="truncate">{convertToReadable(date)}</p>
+        </div>
+      );
+    } else if (subItem.action.type === "checkout" && checkOut) {
+      return (
+        <div className="max-w-[70px] text-sm text-gray-500">
+          <p className="truncate">{convertToReadable(checkOut)}</p>
+        </div>
+      );
+    } else {
+      return <p className="text-sm text-gray-500">{subItem.action.title}</p>;
+    }
+  }
+
+  useEffect(() => {
+    console.log(checkIn, checkOut);
+  }, [checkIn, checkOut]);
+
+  function getIfValueSelected(subItem: SubItem) {
+    if (subItem.action.type === "location-search-dropdown" && destination) {
+      return (
+        <Button
+          onClick={() => dispatch(setDestination(""))}
+          variant="icon"
+          className="absolute my-auto right-2 p-1 bg-white hover:bg-gray-100"
+        >
+          <IconX size={15} />
+        </Button>
+      );
+    } else if (
+      subItem.action.type === "invitation-menu" &&
+      generateGuestText(subItem) !== subItem.action.title
+    ) {
+      return (
+        <Button
+          onClick={() =>
+            dispatch(setGuests({ adults: 0, pets: 0, children: 0, infants: 0 }))
+          }
+          variant="icon"
+          className={`absolute my-auto ${
+            navState ? "right-12" : "right-30"
+          } p-1 bg-white hover:bg-gray-100`}
+        >
+          <IconX size={15} />
+        </Button>
+      );
+    } else if (
+      subItem.action.type === "service-selection" &&
+      generateServiceText(subItem) !== subItem.action.title
+    ) {
+      return (
+        <Button
+          onClick={() => dispatch(setService([]))}
+          variant="icon"
+          className={`absolute my-auto ${
+            navState ? "right-12" : "right-28"
+          } p-1 bg-white hover:bg-gray-100`}
+        >
+          <IconX size={15} />
+        </Button>
+      );
+    } else if (subItem.action.type === "checkin" && checkIn) {
+      return (
+        <Button
+          onClick={() => dispatch(setCheckIn(undefined))}
+          variant="icon"
+          className={`absolute my-auto ${
+            navState ? "right-2" : "right-2"
+          } p-1 bg-white hover:bg-gray-100`}
+        >
+          <IconX size={15} />
+        </Button>
+      );
+    } else if (subItem.action.type === "date" && date) {
+      return (
+        <Button
+          onClick={() => dispatch(setDate(undefined))}
+          variant="icon"
+          className={`absolute my-auto ${
+            navState ? "right-2" : "right-2"
+          } p-1 bg-white hover:bg-gray-100`}
+        >
+          <IconX size={15} />
+        </Button>
+      );
+    } else if (subItem.action.type === "checkout" && checkOut) {
+      return (
+        <Button
+          onClick={() => dispatch(setCheckOut(undefined))}
+          variant="icon"
+          className={`absolute my-auto ${
+            navState ? "right-2" : "right-2"
+          } p-1 bg-white hover:bg-gray-100`}
+        >
+          <IconX size={15} />
+        </Button>
+      );
+    } else {
+      // return <p className="text-sm text-gray-500">{subItem.action.title}</p>;
+    }
+  }
+
+  function getShrunkMenuContent(subItem: SubItem) {
+    console.log("checkInTimestamp", checkIn);
+    if (subItem.action.type === "location-search-dropdown" && destination) {
+      return (
+        <div className="max-w-[70px] text-sm text-gray-500">
+          <p className="truncate">{destination}</p>
+        </div>
+      );
+    } else if (
+      subItem.action.type === "invitation-menu" &&
+      generateGuestText(subItem) !== subItem.action.title
+    ) {
+      return (
+        <div className="max-w-[70px] text-sm text-gray-500">
+          <p className="truncate">{generateGuestText(subItem)}</p>
+        </div>
+      );
+    } else if (
+      subItem.action.type === "service-selection" &&
+      generateServiceText(subItem) !== subItem.action.title
+    ) {
+      return (
+        <div className="max-w-[70px] text-sm text-gray-500">
+          <p className="truncate">{generateServiceText(subItem)}</p>
+        </div>
+      );
+    } else if (subItem.action.type === "checkin" && checkIn) {
+      return (
+        <div className="max-w-[70px] text-sm text-gray-500">
+          <p className="truncate">{convertToReadable(checkIn)}</p>
+        </div>
+      );
+    } else if (subItem.action.type === "date" && date) {
+      return (
+        <div className="max-w-[70px] text-sm text-gray-500">
+          <p className="truncate">{convertToReadable(date)}</p>
+        </div>
+      );
+    } else if (subItem.action.type === "checkout" && checkOut) {
+      return (
+        <div className="max-w-[70px] text-sm text-gray-500">
+          <p className="truncate">{convertToReadable(checkOut)}</p>
+        </div>
+      );
+    } else {
+      if (subItem.action.type === "location-search-dropdown") {
+        return "Anywhere";
+      } else if (subItem.action.type.includes("date")) {
+        return "Anytime";
+      } else if (subItem.action.type === "service-selection") {
+        return "Any";
+      } else {
+        return "Anyone";
+      }
+    }
+  }
+
+  function generateGuestText(subItem: SubItem): string {
+    const roleLabels: Record<keyof GuestState, string> = {
+      adults: "adult",
+      children: "child",
+      infants: "infant",
+      pets: "pet",
+    };
+
+    const parts: string[] = [];
+
+    (Object.keys(guests) as (keyof GuestState)[]).forEach((key) => {
+      const value = guests[key];
+      if (value > 0) {
+        const label = roleLabels[key];
+
+        parts.push(`${value} ${label}${value > 1 ? "s" : ""}`);
+      }
+    });
+
+    return parts.length === 0 ? subItem.action.title : parts.join(", ");
+  }
+
+  function generateServiceText(subItem: SubItem): string {
+    return services.length === 0 ? subItem.action.title : services.join(", ");
   }
 
   // update subItems when parent tab changes
@@ -84,12 +342,11 @@ export default function NavSearch() {
         indicator.style.width = `${activeBtn.offsetWidth}px`;
         indicator.style.left = `${activeBtn.offsetLeft}px`;
       }
-    }, 180);
+    }, 0);
   }, [activeSubitem, subItems]);
 
   useEffect(() => {
     const handleResize = () => {
-      console.log("resize");
       if (activeSubitem > -1) {
         const activeBtn = subItemRefs.current[activeSubitem];
         if (indicatorRef.current && activeBtn) {
@@ -137,14 +394,13 @@ export default function NavSearch() {
       ></div>
 
       {subItems?.map((subItem, i) => (
-        <button
+        <div
           key={i}
           ref={(el) => (subItemRefs.current[i] = el)}
           onClick={() => {
             if (navState && !subNavState) {
               dispatch(setActiveSubNavState(1));
-            }
-            setActiveSubItem(i);
+            } else setActiveSubItem(i);
           }}
           onMouseEnter={() => setHover(i)}
           onMouseLeave={() => setHover(-1)}
@@ -180,15 +436,18 @@ export default function NavSearch() {
           )}
           {navState && !subNavState ? (
             <div className="text-sm text-gray-600 font-semibold pl-3">
-              Anytime
+              {getShrunkMenuContent(subItem)}
             </div>
           ) : (
             <>
               <p className="text-xs font-semibold">{subItem.label}</p>
-              <p className="text-sm text-gray-500">{subItem.action.title}</p>
+
+              {getComponentOrValue(subItem)}
             </>
           )}
-        </button>
+
+          {getIfValueSelected(subItem)}
+        </div>
       ))}
 
       <Menu
@@ -203,11 +462,16 @@ export default function NavSearch() {
       <div
         className={`absolute z-11  ${
           navState && !subNavState
-            ? "top-[15%] right-[6px]"
+            ? "top-[17%] right-[6px]"
             : "top-[20%] right-[10px]"
         }`}
       >
         <Button
+          onClick={() => {
+            if (!searchIndicator) {
+              dispatch(setSearchIndicator(1));
+            }
+          }}
           variant="icon"
           className={`text-white overflow-hidden flex items-center gap-2 bg-secondary-500 hover:bg-secondary-800 ${
             navState && !subNavState ? "p-1" : " p-3"

@@ -1,17 +1,22 @@
 export type ActionType =
   | "location-search-dropdown"
-  | "date-range"
+  | "checkout"
+  | "checkin"
   | "invitation-menu"
   | "date"
-  | "location-search";
+  | "location-search"
+  | "service-selection";
 
 export type SubItem = {
   label: string;
   action: { title: string; type: ActionType };
 };
 
+export type Type = "home" | "experience" | "service";
+
 export type NavigationItem = {
   label: string;
+  slug: Type;
   links: string[];
   hasNew: boolean;
   subItems: SubItem[];
@@ -20,6 +25,7 @@ export type NavigationItem = {
 export const navigationItems: NavigationItem[] = [
   {
     label: "Homes",
+    slug: "home",
     links: [],
     hasNew: false,
     subItems: [
@@ -34,14 +40,14 @@ export const navigationItems: NavigationItem[] = [
         label: "Check in",
         action: {
           title: "Add dates",
-          type: "date-range",
+          type: "checkin",
         },
       },
       {
         label: "Check out",
         action: {
           title: "Add dates",
-          type: "date-range",
+          type: "checkout",
         },
       },
       {
@@ -55,6 +61,7 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     label: "Experiences",
+    slug: "experience",
     links: [],
     hasNew: true,
     subItems: [
@@ -84,6 +91,7 @@ export const navigationItems: NavigationItem[] = [
   },
   {
     label: "Services",
+    slug: "service",
     links: [],
     hasNew: true,
     subItems: [
@@ -103,10 +111,10 @@ export const navigationItems: NavigationItem[] = [
       },
 
       {
-        label: "Who",
+        label: "Type of service",
         action: {
-          title: "Add guests",
-          type: "invitation-menu",
+          title: "Add service",
+          type: "service-selection",
         },
       },
     ],

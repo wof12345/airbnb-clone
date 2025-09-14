@@ -14,9 +14,6 @@ export const getServices = async (
       country,
       city,
       language,
-      guest_type,
-      min_guest,
-      max_guest,
       service_types,
     } = req.query;
 
@@ -32,49 +29,41 @@ export const getServices = async (
       filter.end_date = { $gte: new Date(date as string) };
     }
 
-    if (type) filter.type = type;
+    if (type) {
+      filter.type = type;
+    }
 
     if (country) filter.country = country;
     if (city) filter.city = city;
 
     if (language) filter.language = language;
 
-    if (guest_type || min_guest || max_guest) {
+    if (req.query.guests) {
+      const guestFilters = (req.query.guests as string).split(",");
       filter.guests = {
-        $elemMatch: {
-          ...(guest_type ? { type: guest_type } : {}),
-          ...(min_guest ? { amount: { $gte: Number(min_guest) } } : {}),
-          ...(max_guest ? { amount: { $lte: Number(max_guest) } } : {}),
-        },
+        $all: guestFilters.map((g) => {
+          const [type, range] = g.split(":");
+          const [min, max] = range.split("-").map(Number);
+
+          return {
+            $elemMatch: {
+              type,
+              ...(min ? { amount: { $gte: min } } : {}),
+              ...(max ? { amount: { $lte: max } } : {}),
+            },
+          };
+        }),
       };
     }
 
     if (service_types) {
       const types = (service_types as string).split(",");
-      filter.service_type = { $in: types };
+      filter.service_type = { $all: types };
     }
 
     const services: IService[] = await Service.find(filter);
 
-    let grouped: Record<string, IService[]> = {};
-
-    if (type === "home" || type === "experience") {
-      grouped = services.reduce((acc: Record<string, IService[]>, service) => {
-        const key = service.country;
-        if (!acc[key]) acc[key] = [];
-        acc[key].push(service);
-        return acc;
-      }, {});
-    } else {
-      services.forEach((service) => {
-        service.service_type.forEach((st) => {
-          if (!grouped[st]) grouped[st] = [];
-          grouped[st].push(service);
-        });
-      });
-    }
-
-    res.json(grouped);
+    res.json(services);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }

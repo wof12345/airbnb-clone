@@ -25,6 +25,8 @@ export interface IService extends Document {
   start_date: Date;
   end_date: Date;
   coordinates?: ICoordinate[];
+  days: number;
+  days_unit: "days" | "nights";
   country: string;
   city: string;
   language: "en" | "bn";
@@ -56,6 +58,9 @@ const ServiceSchema = new Schema<IService>(
     coordinates: [{ lat: Number, lng: Number }],
     country: { type: String, required: true },
     city: { type: String, required: true },
+
+    days: { type: Number, required: true },
+    days_unit: { type: String, enum: ["days", "nights"] },
 
     language: { type: String, required: true, enum: ["en", "bn"] },
 

@@ -8,55 +8,70 @@ export interface GuestState {
 }
 
 export interface FilterState {
-  destination?: { id: string; address: string; description: string };
-  checkIn?: { date: string | Date };
-  checkOut?: { date: string | Date };
-  date?: { date: string | Date };
+  destination?: string;
+  checkIn?: string | Date | undefined;
+  checkOut?: string | Date | undefined;
+  date?: string | Date | undefined;
   guests: GuestState;
-  service?: { id: string; name: string };
+  service?: string[];
 }
 
 const initialState: FilterState = {
-  destination: undefined,
+  destination: "",
   checkIn: undefined,
   checkOut: undefined,
   date: undefined,
   guests: { adults: 0, children: 0, infants: 0, pets: 0 },
-  service: undefined,
+  service: [],
 };
 
 const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    setDestination: (
-      state,
-      action: PayloadAction<{
-        id: string;
-        address: string;
-        description: string;
-      }>
-    ) => {
+    setDestination: (state, action: PayloadAction<string>) => {
       state.destination = action.payload;
     },
-    setCheckIn: (state, action: PayloadAction<{ date: string | Date }>) => {
+
+    setCheckIn: (state, action: PayloadAction<string | Date | undefined>) => {
       state.checkIn = action.payload;
     },
-    setCheckOut: (state, action: PayloadAction<{ date: string | Date }>) => {
+
+    setCheckOut: (state, action: PayloadAction<string | Date | undefined>) => {
       state.checkOut = action.payload;
     },
-    setDate: (state, action: PayloadAction<{ date: string | Date }>) => {
+
+    setDate: (state, action: PayloadAction<string | Date | undefined>) => {
       state.date = action.payload;
     },
-    setGuests: (state, action: PayloadAction<GuestState>) => {
-      state.guests = action.payload;
-    },
-    setService: (
-      state,
-      action: PayloadAction<{ id: string; name: string }>
-    ) => {
+
+    setService: (state, action: PayloadAction<string[]>) => {
       state.service = action.payload;
     },
+
+    addService: (state, action: PayloadAction<string>) => {
+      state.service?.push(action.payload);
+    },
+
+    removeService: (state, action: PayloadAction<string>) => {
+      if (!state.service) return;
+      state.service = state.service.filter((s) => s !== action.payload);
+    },
+
+    setGuests: (state, action: PayloadAction<Partial<GuestState>>) => {
+      state.guests = { ...state.guests, ...action.payload };
+    },
+
+    incrementGuest: (state, action: PayloadAction<keyof GuestState>) => {
+      state.guests[action.payload] += 1;
+    },
+
+    decrementGuest: (state, action: PayloadAction<keyof GuestState>) => {
+      if (state.guests[action.payload] > 0) {
+        state.guests[action.payload] -= 1;
+      }
+    },
+
     resetFilter: () => initialState,
   },
 });
@@ -66,6 +81,10 @@ export const {
   setCheckIn,
   setCheckOut,
   setDate,
+  incrementGuest,
+  addService,
+  removeService,
+  decrementGuest,
   setGuests,
   setService,
   resetFilter,

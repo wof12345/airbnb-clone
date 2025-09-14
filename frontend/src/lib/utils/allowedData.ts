@@ -1,0 +1,47 @@
+export const allowed_countries = [
+  "United States",
+  "United Kingdom",
+  "France",
+  "Italy",
+  "Spain",
+  "Germany",
+  "Australia",
+  "Canada",
+  "Japan",
+  "Thailand",
+];
+
+export const allowed_cities = [
+  "New York",
+  "London",
+  "Tokyo",
+  "Paris",
+  "Bangkok",
+  "Dubai",
+  "Singapore",
+  "Los Angeles",
+  "Hong Kong",
+  "Barcelona",
+  "Rome",
+  "Istanbul",
+  "Sydney",
+  "Amsterdam",
+  "Seoul",
+  "Berlin",
+  "Shanghai",
+  "Toronto",
+  "Mumbai",
+  "San Francisco",
+];
+
+export const allowed_service_types = [
+  "Photography",
+  "Chefs",
+  "Prepared meals",
+  "Massage",
+  "Training",
+  "Make-up Hair",
+  "Spa treatments",
+  "Catering",
+  "Nails",
+];

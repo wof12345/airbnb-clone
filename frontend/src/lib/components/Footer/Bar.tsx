@@ -26,7 +26,7 @@ export default function FooterBar() {
 
   return (
     <button
-      className={`nav-search-container md:hidden sticky w-full flex bg-primary-50  items-center text-gray-400 justify-evenly py-2.5 px-4  ${
+      className={`nav-search-container md:hidden sticky w-full flex bg-primary-50 z-50  items-center text-gray-400 justify-evenly py-2.5 px-4  ${
         state ? "bottom-0" : "-bottom-56"
       }`}
       style={{ boxShadow: "0px 0px 40px -20px rgba(0,0,0,0.30)" }}

@@ -52,8 +52,8 @@ export default function Menu({
       case "type-4":
         return {
           top: relativeTop,
-          left: "50%",
-          width: "50%",
+          left: "40%",
+          width: "60%",
         };
       default:
         return {
@@ -71,10 +71,10 @@ export default function Menu({
       if (anchor) {
         const rect = anchor.getBoundingClientRect();
         const containerRect = containerRef?.current.getBoundingClientRect();
-        console.log(getStyleByType(type, rect, containerRect));
+
         setStyles(getStyleByType(type, rect, containerRect));
       }
-    }, 150);
+    }, 130);
   };
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function Menu({
       ref={menuRef}
       style={{ top: styles.top, left: styles.left, width: styles.width }}
       className={twMerge(
-        `absolute top-0 left-0 z-50 min-h-[400px] bg-white shadow-lg rounded-4xl p-4 min-w-[200px] delay-700 ${
+        `absolute top-0 left-0 z-50 min-h-[200px] h-max bg-white shadow-lg rounded-4xl p-4 min-w-[200px] delay-700 ${
           open
             ? "scale-100 opacity-100"
             : "scale-0 pointer-events-none opacity-0"

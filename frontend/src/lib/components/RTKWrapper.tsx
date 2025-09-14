@@ -8,11 +8,5 @@ type Props = {
 };
 
 export default function RTKWrapper({ children }: Props) {
-  return (
-    <html>
-      <body>
-        <Provider store={store}>{children}</Provider>
-      </body>
-    </html>
-  );
+  return <Provider store={store}>{children}</Provider>;
 }
