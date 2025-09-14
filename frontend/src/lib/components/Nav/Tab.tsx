@@ -68,7 +68,7 @@ export default function NavTab({ items = [] }: Props) {
 
   return (
     <div
-      className={`nav-tab-container flex flex-col gap-4 text-gray-700 relative py-0.5 pt-2 md:py-2 mx-10 md:mx-0 w-[500px] ${
+      className={`nav-tab-container flex flex-col gap-4 text-gray-700 relative py-0.5 pt-2 md:py-2 mx-10 md:mx-0 w-full md:w-[500px] ${
         navState && !subNavState ? "md:-translate-y-[200%]" : ""
       }`}
       onMouseOut={(e) => handleMouseOut(e)}
