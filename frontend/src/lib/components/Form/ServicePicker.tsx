@@ -1,5 +1,5 @@
 import { addService, removeService } from "@/lib/store/filterSlice";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "@/lib/store/store";
 import {
   IconBottle,
   IconBottleFilled,

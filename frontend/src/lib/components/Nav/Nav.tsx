@@ -12,7 +12,7 @@ import {
   setActiveSubNavState,
   setAppBarState,
 } from "@/lib/store/navSlice";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "@/lib/store/store";
 import NavSearchResponsive from "./SearchResponsive";
 import Modal from "../Modal";
 import { setLanguageModal } from "@/lib/store/modalSlice";

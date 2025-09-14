@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "@/lib/store/store";
 import { ActionType, navigationItems, SubItem } from "@/lib/data/nav";
 import Button from "../Buttons/Button";
 import { IconSearch, IconX } from "@tabler/icons-react";

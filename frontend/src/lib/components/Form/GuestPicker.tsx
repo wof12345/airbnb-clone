@@ -5,7 +5,7 @@ import {
   incrementGuest,
   setGuests,
 } from "@/lib/store/filterSlice";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "@/lib/store/store";
 import { IconCircleMinus, IconCirclePlus } from "@tabler/icons-react";
 import { useEffect } from "react";
 import "react-calendar/dist/Calendar.css";

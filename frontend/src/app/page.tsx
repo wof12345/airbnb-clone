@@ -5,9 +5,9 @@ import ProductSlider from "@/lib/components/Product/Slider";
 import { navigationItems } from "@/lib/data/nav";
 import { setSearchIndicator } from "@/lib/store/navSlice";
 import { IService, setServices } from "@/lib/store/serviceSlice";
+import { RootState } from "@/lib/store/store";
 import { expItems, homeItems, serviceItems } from "@/lib/utils/dummyUtils";
 
-import { RootState } from "@reduxjs/toolkit/query";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 
@@ -41,12 +41,12 @@ export default function HomePage() {
     const fetchServices = async () => {
       let queryParams = `type=${navigationItems[activeIndex].slug}&&`;
 
-      const desCol = destination.split(",");
+      const desCol = destination?.split(",");
 
       let city;
       let country;
 
-      if (desCol.length > 0) {
+      if (desCol && desCol.length > 0) {
         city = desCol[0].trim();
         country = desCol[1]?.trim();
       } else {
@@ -72,7 +72,7 @@ export default function HomePage() {
         queryParams += `guests=${encodeURIComponent(guestFilters)}&&`;
       }
 
-      if (service?.length > 0) {
+      if (service && service?.length > 0) {
         queryParams += `service_types=${service.join(",")}&&`;
       }
 

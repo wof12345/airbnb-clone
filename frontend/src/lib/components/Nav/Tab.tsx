@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { IconHome } from "@tabler/icons-react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/lib/store/store";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "@/lib/store/store";
 import { setActiveIndex } from "@/lib/store/navSlice";
 
 type Item = {
