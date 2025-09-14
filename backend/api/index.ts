@@ -18,6 +18,6 @@ async function setup() {
 const handler = serverless(app);
 
 export default async function (req, res) {
-  await setup(); // ensure DB is connected once
+  await setup();
   return handler(req, res);
 }
