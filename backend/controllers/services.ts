@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
-import Service, { IService } from "../models/service";
+import { IService } from "../models/service";
+import Service from "../models/service";
+import { connectDB } from "../config/db";
 
 export const getServices = async (
   req: Request,
@@ -16,6 +18,8 @@ export const getServices = async (
       language,
       service_types,
     } = req.query;
+
+    await connectDB();
 
     const filter: any = {};
 
@@ -69,23 +73,12 @@ export const getServices = async (
   }
 };
 
-export const createService = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const serviceData: Partial<IService> = req.body;
-    const service: IService = await Service.create(serviceData);
-    res.status(201).json(service);
-  } catch (err: any) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
 export const getServiceById = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  await connectDB();
+
   try {
     const { id } = req.params;
     const service: IService | null = await Service.findById(id);

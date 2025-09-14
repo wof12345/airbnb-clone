@@ -1,4 +1,4 @@
-import { Schema, model, models, Document } from "mongoose";
+import mongoose, { Schema, model, models, Document } from "mongoose";
 
 export interface ICoordinate {
   lat: number;
@@ -35,7 +35,7 @@ export interface IService extends Document {
   guests?: IGuest[];
 }
 
-const ServiceSchema = new Schema<IService>(
+const ServiceSchema = new Schema(
   {
     title: { type: String, required: true },
     sub_title: { type: String, required: true },
@@ -78,4 +78,6 @@ const ServiceSchema = new Schema<IService>(
   { timestamps: true }
 );
 
-export default models.Service || model<IService>("Service", ServiceSchema);
+const Service = mongoose.model("Service", ServiceSchema);
+
+export default Service;
