@@ -463,7 +463,7 @@ export default function NavSearch() {
         className={`absolute z-11  ${
           navState && !subNavState
             ? "top-[17%] right-[6px]"
-            : "top-[20%] right-[10px]"
+            : "top-[17%] right-[10px]"
         }`}
       >
         <Button

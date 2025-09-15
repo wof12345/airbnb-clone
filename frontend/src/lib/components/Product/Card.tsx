@@ -44,7 +44,7 @@ function ProductCard({ item, ...props }: Props) {
         <></>
       )}
 
-      <div className="absolute top-3 right-3 text-xs shadow-sm z-10 font-semibold text-gray-100 rounded-full ">
+      <div className="absolute top-3 right-3 text-xs z-10 font-semibold text-gray-100 rounded-full ">
         <button type="button" className="hover:scale-110">
           <IconHeart fill="#60594F" fillOpacity={0.5} />
         </button>
